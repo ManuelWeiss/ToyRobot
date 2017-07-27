@@ -77,4 +77,46 @@ class ToyRobotSpec extends FlatSpec with Matchers {
     robot.report() shouldBe (2, 2, East)
   }
 
+  it should "allow to add a pothole" in {
+    robot.addPothole(2, 2)
+
+    robot.place(2, 1, North)
+
+    robot.move()
+    robot.report() shouldBe (2, 1, North)
+  }
+
+
+  it should "allow to remove a pothole" in {
+    robot.addPothole(2, 2)
+
+    robot.place(2, 1, North)
+
+    robot.move()
+    robot.report() shouldBe (2, 1, North)
+
+    robot.removePothole(2, 2)
+
+    robot.move()
+    robot.report() shouldBe (2, 2, North)
+  }
+
+  it should "robot should find a way" in {
+    robot.place(0, 0, North)
+    robot.goTo(2, 2) shouldBe List((1, 0), (2, 0), (2, 1), (2, 2))
+  }
+
+  it should "robot should avoid potholes on the way" in {
+    robot.place(0, 0, North)
+    robot.addPothole(1, 0)
+    robot.goTo(2, 2) shouldBe List((0, 1), (1, 1), (2, 1), (2, 2))
+  }
+
+  it should "robot should avoid potholes on the way - strategy 2" in {
+    robot.place(0, 0, North)
+    robot.addPothole(1, 0)
+    robot.goToWithBackTracking(2, 2) shouldBe List((0, 1), (1, 1), (2, 1), (3, 1), (4, 1), (4, 2), (3, 2), (2, 2))
+  }
+
+
 }
